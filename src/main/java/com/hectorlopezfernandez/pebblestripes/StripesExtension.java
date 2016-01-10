@@ -11,7 +11,9 @@ import com.mitchellbosecke.pebble.extension.Function;
 import com.mitchellbosecke.pebble.tokenParser.TokenParser;
 
 public class StripesExtension extends AbstractExtension {
-	
+
+	public static final String CONTEXT_PATH = "context_path_attribute";
+
     public StripesExtension() {
     }
 
