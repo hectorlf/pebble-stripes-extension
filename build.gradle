@@ -1,0 +1,51 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+tasks.withType(JavaCompile) {
+   options.incremental = true
+   sourceCompatibility = '1.7'
+   targetCompatibility = '1.7'
+}
+
+repositories {
+   mavenCentral()
+}
+
+
+dependencies {
+   compile 'org.slf4j:slf4j-api:1.7.12'
+   compile 'com.mitchellbosecke:pebble:2.0.0'
+   compile 'net.sourceforge.stripes:stripes:1.6.0'
+   
+   testCompile 'junit:junit:4.12'
+}
+
+
+task sourcesJar(type: Jar, dependsOn: classes) {
+   classifier = 'sources'
+   from sourceSets.main.allSource
+}
+
+task javadocJar(type: Jar, dependsOn: javadoc) {
+   classifier = 'javadoc'
+   from javadoc.destinationDir
+}
+
+tasks.withType(Jar) {
+   baseName = 'stripes-extension'
+   version = '0.5'
+}
+
+artifacts {
+   archives sourcesJar
+   archives javadocJar
+}
+
+
+
+
+// Gradle wrapper task
+// Only used when in need to reinstall the wrapper
+task wrapper(type: Wrapper) {
+   gradleVersion = '2.9'
+}
