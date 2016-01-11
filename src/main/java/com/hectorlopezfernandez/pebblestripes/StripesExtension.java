@@ -12,9 +12,12 @@ import com.mitchellbosecke.pebble.tokenParser.TokenParser;
 
 public class StripesExtension extends AbstractExtension {
 
-	public static final String CONTEXT_PATH = "context_path_attribute";
+	public static final String CONTEXT_PATH = "servletContext.contextPath";
+	
+	private final UrlFunction urlFunction;
 
     public StripesExtension() {
+    	this.urlFunction = new UrlFunction();
     }
 
     @Override
@@ -26,6 +29,7 @@ public class StripesExtension extends AbstractExtension {
     @Override
     public Map<String, Function> getFunctions() {
     	Map<String, Function> functions = new HashMap<>(2);
+    	functions.put(UrlFunction.FUNCTION_NAME, urlFunction);
         return functions;
     }
 
