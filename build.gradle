@@ -15,9 +15,14 @@ repositories {
 dependencies {
    compile 'org.slf4j:slf4j-api:1.7.12'
    compile 'com.mitchellbosecke:pebble:2.0.0'
+   compile 'javax.servlet:javax.servlet-api:3.1.0'
    compile 'net.sourceforge.stripes:stripes:1.6.0'
    
    testCompile 'junit:junit:4.12'
+   testCompile 'org.eclipse.jetty:jetty-servlet:9.3.6.v20151106'
+   testCompile 'org.eclipse.jetty:jetty-client:9.3.6.v20151106'
+   testCompile 'jspapi:jsp-api:2.0'
+   testCompile 'commons-el:commons-el:1.0'
 }
 
 
