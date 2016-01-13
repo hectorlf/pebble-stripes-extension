@@ -1,0 +1,1 @@
+Hi! I'm {{ actionBean.name }}, {{ stripesUrl("com.hectorlopezfernandez.pebblestripes.action.HelloAction",{"name":"Robin","type":"companion"},"more") }}, {{ stripesUrl(value="/index.action",event="alt",prependContext=false) }}

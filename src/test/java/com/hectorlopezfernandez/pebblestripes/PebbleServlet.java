@@ -23,6 +23,8 @@ import com.mitchellbosecke.pebble.loader.ClasspathLoader;
 import com.mitchellbosecke.pebble.loader.Loader;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
 
+import net.sourceforge.stripes.controller.StripesConstants;
+
 @WebServlet(urlPatterns={"*.pebble"},loadOnStartup=4)
 public class PebbleServlet implements Servlet {
 
@@ -69,6 +71,7 @@ public class PebbleServlet implements Servlet {
 		// fill the execution context with request attributes
 		Map<String, Object> context = new HashMap<String,Object>();
 		context.put(StripesExtension.CONTEXT_PATH, request.getServletContext().getContextPath());
+		context.put(StripesConstants.REQ_ATTR_ACTION_BEAN, request.getAttribute(StripesConstants.REQ_ATTR_ACTION_BEAN));
 		
         // write the response headers
         response.setContentType("text/html;charset=UTF-8");
