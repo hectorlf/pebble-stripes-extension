@@ -20,7 +20,7 @@ public class UrlFunction implements Function {
         argumentNames.add("class");
         argumentNames.add("params");
         argumentNames.add("anchor");
-        argumentNames.add("url");
+        argumentNames.add("value");
         argumentNames.add("event");
         argumentNames.add("prependContext");
     }
@@ -36,7 +36,7 @@ public class UrlFunction implements Function {
         ScopeChain values = context.getScopeChain();
 
         // process class and url
-    	String baseUrl = ResolveUtils.resolveBaseUrl(args.get("class"), args.get("url"));
+    	String baseUrl = ResolveUtils.resolveBaseUrl(args.get("class"), args.get("value"));
         // process url parameters
     	Map<Object,Object> parameters = ResolveUtils.resolveParameters(args.get("params"));
         // process anchor
