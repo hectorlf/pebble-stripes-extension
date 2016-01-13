@@ -36,6 +36,7 @@ public class StripesExtensionTests {
 		FilterHolder sfh = context.addFilter(StripesFilter.class, "*.action", EnumSet.of(DispatcherType.FORWARD,DispatcherType.INCLUDE,DispatcherType.REQUEST));
 		sfh.setInitParameter("ActionResolver.Packages", "com.hectorlopezfernandez.pebblestripes");
 		context.addServlet(DispatcherServlet.class, "*.action");
+		context.addServlet(PebbleServlet.class, "*.pebble");
 		server.setHandler(context);
 		try {
 			server.start();
@@ -66,9 +67,17 @@ public class StripesExtensionTests {
 	}
 
 	@Test
-	public void testServerUp() throws Exception {
+	public void test0ServerUp() throws Exception {
 		ContentResponse response = httpClient.newRequest("localhost", port).method(HttpMethod.GET).path("/test/index.action").send();
 		Assert.assertEquals(200, response.getStatus());
+		System.out.println(response.getStatus() + " - " + response.getContentAsString());
+	}
+	
+	@Test
+	public void testSimpleUrl() throws Exception {
+		ContentResponse response = httpClient.newRequest("localhost", port).method(HttpMethod.GET).path("/test/simple-url.action").send();
+		Assert.assertEquals(200, response.getStatus());
+		Assert.assertEquals("/test/simple-url.action", response.getContentAsString());
 		System.out.println(response.getStatus() + " - " + response.getContentAsString());
 	}
 
