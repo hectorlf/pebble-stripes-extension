@@ -3,6 +3,8 @@ package com.hectorlopezfernandez.pebblestripes;
 import java.util.Collections;
 import java.util.Map;
 
+import javax.servlet.http.HttpServletRequest;
+
 import com.mitchellbosecke.pebble.template.ScopeChain;
 
 import net.sourceforge.stripes.action.ActionBean;
@@ -86,9 +88,9 @@ final class ResolveUtils {
     }
 
 	public static String resolveContextPath(ScopeChain values) {
-		String path = (String) values.get(StripesExtension.CONTEXT_PATH);
-		if (path == null || path.length() == 0) throw new IllegalStateException("Couldn't find the context path in the scope chain. Every template execution must have the servlet context's context path injected into the ");
-    	return path;
+		HttpServletRequest request = (HttpServletRequest) values.get(StripesExtension.HTTP_SERVLET_REQUEST);
+		if (request == null) throw new IllegalStateException("Couldn't find the HttpServletRequest object in the scope chain. Every template invocation must have the request object injected into the evaluation context.");
+    	return request.getContextPath();
     }
 
 	public static Boolean resolvePrependContext(Object prependContext) {

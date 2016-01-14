@@ -36,7 +36,7 @@ public class StripesExtensionTests {
 		FilterHolder sfh = context.addFilter(StripesFilter.class, "*.action", EnumSet.of(DispatcherType.FORWARD,DispatcherType.INCLUDE,DispatcherType.REQUEST));
 		sfh.setInitParameter("ActionResolver.Packages", "com.hectorlopezfernandez.pebblestripes");
 		context.addServlet(DispatcherServlet.class, "*.action");
-		context.addServlet(PebbleServlet.class, "*.pebble");
+		context.addServlet(CustomPebbleServlet.class, "*.pebble");
 		server.setHandler(context);
 		try {
 			server.start();

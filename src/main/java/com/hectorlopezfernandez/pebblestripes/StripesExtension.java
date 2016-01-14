@@ -12,7 +12,8 @@ import com.mitchellbosecke.pebble.tokenParser.TokenParser;
 
 public class StripesExtension extends AbstractExtension {
 
-	public static final String CONTEXT_PATH = "servletContext.contextPath";
+	public static final String HTTP_SERVLET_REQUEST = "request";
+	public static final String HTTP_SERVLET_RESPONSE = "response";
 	
 	private final UrlFunction urlFunction;
 
