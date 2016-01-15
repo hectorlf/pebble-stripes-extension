@@ -54,7 +54,7 @@ public class UrlFunction implements Function {
         // prepend context if needed
         String contextPath = ResolveUtils.resolveContextPath(values);
         Boolean prependContext = ResolveUtils.resolvePrependContext(args.get("prependContext"));
-        boolean prepend = (prependContext == null && computedUrl.startsWith("/") && !computedUrl.startsWith(contextPath)) || prependContext;
+        boolean prepend = (prependContext != null && prependContext) || (prependContext == null && computedUrl.startsWith("/") && !computedUrl.startsWith(contextPath));
         if (prepend) computedUrl = contextPath + computedUrl;
 
 		return computedUrl;

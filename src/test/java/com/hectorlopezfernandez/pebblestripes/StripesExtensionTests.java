@@ -9,6 +9,7 @@ import org.eclipse.jetty.client.api.ContentResponse;
 import org.eclipse.jetty.http.HttpMethod;
 import org.eclipse.jetty.server.Server;
 import org.eclipse.jetty.server.ServerConnector;
+import org.eclipse.jetty.server.handler.ContextHandlerCollection;
 import org.eclipse.jetty.servlet.FilterHolder;
 import org.eclipse.jetty.servlet.ServletContextHandler;
 import org.junit.AfterClass;
@@ -31,13 +32,25 @@ public class StripesExtensionTests {
 	@BeforeClass
 	public static void setup() {
 		Server server = new Server(0);
-		ServletContextHandler context = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
-		context.setContextPath("/test");
-		FilterHolder sfh = context.addFilter(StripesFilter.class, "*.action", EnumSet.of(DispatcherType.FORWARD,DispatcherType.INCLUDE,DispatcherType.REQUEST));
-		sfh.setInitParameter("ActionResolver.Packages", "com.hectorlopezfernandez.pebblestripes");
-		context.addServlet(DispatcherServlet.class, "*.action");
-		context.addServlet(CustomPebbleServlet.class, "*.pebble");
-		server.setHandler(context);
+		// 'test' context
+		ServletContextHandler testContext = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
+		testContext.setContextPath("/test");
+		FilterHolder tcsfh = testContext.addFilter(StripesFilter.class, "*.action", EnumSet.of(DispatcherType.FORWARD,DispatcherType.INCLUDE,DispatcherType.REQUEST));
+		tcsfh.setInitParameter("ActionResolver.Packages", "com.hectorlopezfernandez.pebblestripes");
+		testContext.addServlet(DispatcherServlet.class, "*.action");
+		testContext.addServlet(CustomPebbleServlet.class, "*.pebble");
+		// 'root' context
+		ServletContextHandler rootContext = new ServletContextHandler(ServletContextHandler.NO_SESSIONS);
+		rootContext.setContextPath("/");
+		FilterHolder rcsfh = rootContext.addFilter(StripesFilter.class, "*.action", EnumSet.of(DispatcherType.FORWARD,DispatcherType.INCLUDE,DispatcherType.REQUEST));
+		rcsfh.setInitParameter("ActionResolver.Packages", "com.hectorlopezfernandez.pebblestripes");
+		rootContext.addServlet(DispatcherServlet.class, "*.action");
+		rootContext.addServlet(CustomPebbleServlet.class, "*.pebble");
+		// handle context collection
+		ContextHandlerCollection chc = new ContextHandlerCollection();
+		chc.addHandler(testContext);
+		chc.addHandler(rootContext);
+		server.setHandler(chc);
 		try {
 			server.start();
 		} catch (Exception e) {
@@ -86,6 +99,15 @@ public class StripesExtensionTests {
 		ContentResponse response = httpClient.newRequest("localhost", port).method(HttpMethod.GET).path("/test/hello/Batman/msg.action").send();
 		Assert.assertEquals(200, response.getStatus());
 		Assert.assertEquals("Hi! I'm Batman, /test/hello/Robin/msg.action?type=companion#more, /index.action?alt=", response.getContentAsString());
+		System.out.println(response.getStatus() + " - " + response.getContentAsString());
+	}
+
+	// regression test for UrlFunction's prependContext that failed for ROOT contexts
+	@Test
+	public void testRootUrl() throws Exception {
+		ContentResponse response = httpClient.newRequest("localhost", port).method(HttpMethod.GET).path("/root-url.action").send();
+		Assert.assertEquals(200, response.getStatus());
+		Assert.assertEquals("/root-url.action", response.getContentAsString());
 		System.out.println(response.getStatus() + " - " + response.getContentAsString());
 	}
 
