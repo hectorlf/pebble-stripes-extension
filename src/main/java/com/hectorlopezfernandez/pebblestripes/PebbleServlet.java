@@ -1,7 +1,6 @@
 package com.hectorlopezfernandez.pebblestripes;
 
 import java.io.IOException;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.servlet.Servlet;
@@ -21,8 +20,6 @@ import com.mitchellbosecke.pebble.error.PebbleException;
 import com.mitchellbosecke.pebble.loader.Loader;
 import com.mitchellbosecke.pebble.loader.ServletLoader;
 import com.mitchellbosecke.pebble.template.PebbleTemplate;
-
-import net.sourceforge.stripes.controller.StripesConstants;
 
 public class PebbleServlet implements Servlet {
 
@@ -70,11 +67,12 @@ public class PebbleServlet implements Servlet {
 		HttpServletRequest request = (HttpServletRequest)arg0;
 		HttpServletResponse response = (HttpServletResponse)arg1;
 		
-		// fill the execution context with request attributes
-		Map<String, Object> context = new HashMap<String,Object>(4);
+		// execution context is backed by a delegating map to be able to access variables
+		// stored in HttpServletRequest's attribute map
+		// also, request and response objects are added as a bonus
+		Map<String, Object> context = new HttpServletRequestMapAdapter(request);
 		context.put(StripesExtension.HTTP_SERVLET_REQUEST, request);
 		context.put(StripesExtension.HTTP_SERVLET_RESPONSE, response);
-		context.put(StripesConstants.REQ_ATTR_ACTION_BEAN, request.getAttribute(StripesConstants.REQ_ATTR_ACTION_BEAN));
 		
         // write the response headers
         if (response.getContentType() == null) response.setContentType("text/html;charset=UTF-8");
