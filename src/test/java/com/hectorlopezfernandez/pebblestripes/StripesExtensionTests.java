@@ -115,7 +115,7 @@ public class StripesExtensionTests {
 	public void testRequestAttributes() throws Exception {
 		ContentResponse response = httpClient.newRequest("localhost", port).method(HttpMethod.GET).path("/test/request-attributes.action").send();
 		Assert.assertEquals(200, response.getStatus());
-		Assert.assertEquals("Hi! I'm Batman, /test/hello/Robin/msg.action?type=companion#more, /index.action?alt=", response.getContentAsString());
+		Assert.assertEquals("BLA, BLU, /templates/request-attributes.pebble", response.getContentAsString());
 		System.out.println(response.getStatus() + " - " + response.getContentAsString());
 	}
 
