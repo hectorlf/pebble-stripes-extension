@@ -79,8 +79,8 @@ public class PebbleServlet implements Servlet {
         	return;
         } catch (PebbleException pe) {
         	// error parsing template, log to error and return 500
-        	logger.error("Error parsing template '{}', stacktrace follows", templatePath);
-        	pe.printStackTrace();
+        	logger.error("Error parsing template '{}'", templatePath);
+        	logger.error("Stacktrace: ", pe);
         	response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         	return;
         }
@@ -104,8 +104,8 @@ public class PebbleServlet implements Servlet {
         	template.evaluate(response.getWriter(), context, request.getLocale());
         } catch (PebbleException pe) {
         	// error processing template, log to error and return 500
-        	logger.error("Error processing template '{}', stacktrace follows", templatePath);
-        	pe.printStackTrace();
+        	logger.error("Error processing template '{}'", templatePath);
+        	logger.error("Stacktrace: ", pe);
         	response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         	return;
         } catch (IOException ioe) {
