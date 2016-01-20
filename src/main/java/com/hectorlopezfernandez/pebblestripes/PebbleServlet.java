@@ -73,6 +73,7 @@ public class PebbleServlet implements Servlet {
 		Map<String, Object> context = new HttpServletRequestMapAdapter(request);
 		context.put(StripesExtension.HTTP_SERVLET_REQUEST, request);
 		context.put(StripesExtension.HTTP_SERVLET_RESPONSE, response);
+		configureEvaluationContext(context, request, response);
 		
         // write the response headers
         if (response.getContentType() == null) response.setContentType("text/html;charset=UTF-8");
@@ -82,7 +83,7 @@ public class PebbleServlet implements Servlet {
         
         // load template
         PebbleTemplate template = null;
-        String templatePath = parseTemplatePath(request.getServletPath());
+        String templatePath = parseTemplatePath(request.getServletPath(), request, response);
         try {
         	template = engine.getTemplate(templatePath);
         } catch (LoaderException le) {
@@ -117,8 +118,12 @@ public class PebbleServlet implements Servlet {
 		// empty by default
 	}
 
-	protected String parseTemplatePath(String servletPath) {
-		return servletPath;
+	protected String parseTemplatePath(String originalPath, HttpServletRequest request, HttpServletResponse response) {
+		return originalPath;
+	}
+
+	protected void configureEvaluationContext(Map<String, Object> context, HttpServletRequest request, HttpServletResponse response) {
+		// empty by default
 	}
 
 }
