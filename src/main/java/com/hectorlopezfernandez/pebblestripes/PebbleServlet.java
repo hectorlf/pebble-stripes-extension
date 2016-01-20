@@ -66,22 +66,8 @@ public class PebbleServlet implements Servlet {
 		
 		HttpServletRequest request = (HttpServletRequest)arg0;
 		HttpServletResponse response = (HttpServletResponse)arg1;
-		
-		// execution context is backed by a delegating map to be able to access variables
-		// stored in HttpServletRequest's attribute map
-		// also, request and response objects are added as a bonus
-		Map<String, Object> context = new HttpServletRequestMapAdapter(request);
-		context.put(StripesExtension.HTTP_SERVLET_REQUEST, request);
-		context.put(StripesExtension.HTTP_SERVLET_RESPONSE, response);
-		configureEvaluationContext(context, request, response);
-		
-        // write the response headers
-        if (response.getContentType() == null) response.setContentType("text/html;charset=UTF-8");
-        if (!response.containsHeader("Pragma")) response.setHeader("Pragma", "no-cache");
-        if (!response.containsHeader("Cache-Control")) response.setHeader("Cache-Control", "no-cache");
-        if (!response.containsHeader("Expires")) response.setDateHeader("Expires", 0);
-        
-        // load template
+
+        // load template and fail fast if not found
         PebbleTemplate template = null;
         String templatePath = parseTemplatePath(request.getServletPath(), request, response);
         try {
@@ -98,6 +84,21 @@ public class PebbleServlet implements Servlet {
         	response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         	return;
         }
+
+		// execution context is backed by a delegating map to be able to access variables
+		// stored in HttpServletRequest's attribute map
+		// also, request and response objects are added as a bonus
+		Map<String, Object> context = new HttpServletRequestMapAdapter(request);
+		context.put(StripesExtension.HTTP_SERVLET_REQUEST, request);
+		context.put(StripesExtension.HTTP_SERVLET_RESPONSE, response);
+		configureEvaluationContext(context, request, response);
+		
+        // write the response headers
+        if (response.getContentType() == null) response.setContentType("text/html;charset=UTF-8");
+        if (!response.containsHeader("Pragma")) response.setHeader("Pragma", "no-cache");
+        if (!response.containsHeader("Cache-Control")) response.setHeader("Cache-Control", "no-cache");
+        if (!response.containsHeader("Expires")) response.setDateHeader("Expires", 0);
+        
         // evaluate template
         try {
         	template.evaluate(response.getWriter(), context, request.getLocale());
