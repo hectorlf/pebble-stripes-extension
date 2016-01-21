@@ -106,7 +106,9 @@ public class PebbleServlet implements Servlet {
         	// error processing template, log to error and return 500
         	logger.error("Error processing template '{}'", templatePath);
         	logger.error("Stacktrace: ", pe);
-        	response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        	// at this stage, it's very likely that response has already been written
+        	// and trying to sendError only makes for a worse stack trace
+        	//response.sendError(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         	return;
         } catch (IOException ioe) {
         	// probably a closed connection, log to debug and nothing more to do
